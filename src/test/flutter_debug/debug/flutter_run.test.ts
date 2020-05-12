@@ -362,7 +362,7 @@ describe(`flutter run debugger (launch on ${flutterTestDeviceId})`, () => {
 				path: fsPath(flutterHelloWorldMainFile),
 				verified: false,
 			})
-				.then(() => delay(2000))
+				.then(() => delay(20000))
 				.then(() => dc.terminateRequest()),
 		]);
 
@@ -666,7 +666,7 @@ describe(`flutter run debugger (launch on ${flutterTestDeviceId})`, () => {
 			// after launch to ensure we didn't stop unexpectedly.
 			if (expectation === resolvedPromise)
 				// This may be too low for web.
-				expectation = dc.waitForEvent("initialized").then(() => delay(2000));
+				expectation = dc.waitForEvent("initialized").then(() => delay(20000));
 
 			await Promise.all([
 				dc.waitForEvent("terminated"),
@@ -815,10 +815,7 @@ describe(`flutter run debugger (launch on ${flutterTestDeviceId})`, () => {
 		]);
 	});
 
-	it("excludes type args from local variables when stopped at a breakpoint in a generic method", async function () {
-		// if (flutterTestDeviceIsWeb)
-		// 	return this.skip();
-
+	it("excludes type args from local variables when stopped at a breakpoint in a generic method", async () => {
 		await openFile(flutterHelloWorldMainFile);
 		const debugConfig = await startDebugger(dc, flutterHelloWorldMainFile);
 		await dc.hitBreakpoint(debugConfig, {
@@ -837,10 +834,7 @@ describe(`flutter run debugger (launch on ${flutterTestDeviceId})`, () => {
 		]);
 	});
 
-	it("includes getters in variables when stopped at a breakpoint", async function () {
-		// if (flutterTestDeviceIsWeb)
-		// 	return this.skip();
-
+	it("includes getters in variables when stopped at a breakpoint", async () => {
 		await openFile(flutterHelloWorldGettersFile);
 		const config = await startDebugger(dc, flutterHelloWorldGettersFile);
 		await dc.hitBreakpoint(config, {
@@ -867,10 +861,7 @@ describe(`flutter run debugger (launch on ${flutterTestDeviceId})`, () => {
 
 	// Currently skipped because we sometimes get different text from locals, eg.:
 	// "StatelessElement" vs "StatelessElement (MyHomepage(dirty))" 🤔
-	it.skip("watch expressions provide same info as locals", async function () {
-		if (flutterTestDeviceIsWeb)
-			return this.skip();
-
+	it.skip("watch expressions provide same info as locals", async () => {
 		await openFile(flutterHelloWorldMainFile);
 		const config = await startDebugger(dc, flutterHelloWorldMainFile);
 		await dc.hitBreakpoint(config, {
@@ -896,10 +887,7 @@ describe(`flutter run debugger (launch on ${flutterTestDeviceId})`, () => {
 		]);
 	});
 
-	it("evaluateName evaluates to the expected value", async function () {
-		if (flutterTestDeviceIsWeb)
-			return this.skip();
-
+	it("evaluateName evaluates to the expected value", async () => {
 		await openFile(flutterHelloWorldMainFile);
 		const config = await startDebugger(dc, flutterHelloWorldMainFile);
 		await dc.hitBreakpoint(config, {
@@ -937,12 +925,7 @@ describe(`flutter run debugger (launch on ${flutterTestDeviceId})`, () => {
 		]);
 	});
 
-	describe("can evaluate at breakpoint", function () {
-		this.beforeEach(function () {
-			if (flutterTestDeviceIsWeb)
-				this.skip();
-		});
-
+	describe("can evaluate at breakpoint", () => {
 		it("simple expressions", async () => {
 			await openFile(flutterHelloWorldMainFile);
 			const config = await startDebugger(dc, flutterHelloWorldMainFile);
@@ -1058,7 +1041,7 @@ describe(`flutter run debugger (launch on ${flutterTestDeviceId})`, () => {
 		dc.waitForEvent("stopped").then(() => didStop = true);
 		await Promise.all([
 			dc.configurationSequence()
-				.then(() => delay(2000))
+				.then(() => delay(20000))
 				.then(() => dc.terminateRequest()),
 			dc.waitForEvent("terminated"),
 			dc.launch(config),
