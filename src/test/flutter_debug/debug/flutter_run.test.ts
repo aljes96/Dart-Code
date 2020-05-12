@@ -33,7 +33,7 @@ describe(`flutter run debugger (launch on ${flutterTestDeviceId})`, () => {
 	let dc: DartDebugClient;
 	beforeEach("create debug client", () => {
 		dc = new DartDebugClient(process.execPath, path.join(ext.extensionPath, "out/extension/debug/flutter_debug_entry.js"), "dart", undefined, extApi.debugCommands, undefined);
-		dc.defaultTimeout = 60000;
+		dc.defaultTimeout = 600000;
 		const thisDc = dc;
 		defer(() => thisDc.stop());
 	});
@@ -165,10 +165,7 @@ describe(`flutter run debugger (launch on ${flutterTestDeviceId})`, () => {
 		assert.equal(config!.program, fsPath(flutterHelloWorldMainFile));
 	});
 
-	it("can hot reload", async function () {
-		if (flutterTestDeviceIsWeb)
-			return this.skip();
-
+	it("can hot reload", async () => {
 		const config = await startDebugger(dc, flutterHelloWorldMainFile);
 		await Promise.all([
 			watchPromise("hot_reloads_successfully->configurationSequence", dc.configurationSequence()),
@@ -650,10 +647,7 @@ describe(`flutter run debugger (launch on ${flutterTestDeviceId})`, () => {
 	});
 
 	function testBreakpointCondition(condition: string, shouldStop: boolean, expectedError?: string) {
-		return async function (this: Mocha.Context) {
-			if (flutterTestDeviceIsWeb)
-				return this.skip();
-
+		return async () => {
 			await openFile(flutterHelloWorldMainFile);
 			const config = await startDebugger(dc, flutterHelloWorldMainFile);
 
@@ -702,10 +696,7 @@ describe(`flutter run debugger (launch on ${flutterTestDeviceId})`, () => {
 	it("does not stop at a breakpoint with a condition returning null", testBreakpointCondition("print('test');", false));
 	it("reports errors evaluating breakpoint conditions", testBreakpointCondition("1 + '1'", false, "Debugger failed to evaluate expression `1 + '1'`"));
 
-	it("logs expected text (and does not stop) at a logpoint", async function () {
-		if (flutterTestDeviceIsWeb)
-			return this.skip();
-
+	it("logs expected text (and does not stop) at a logpoint", async () => {
 		await openFile(flutterHelloWorldMainFile);
 		const config = await startDebugger(dc, flutterHelloWorldMainFile);
 
@@ -825,8 +816,8 @@ describe(`flutter run debugger (launch on ${flutterTestDeviceId})`, () => {
 	});
 
 	it("excludes type args from local variables when stopped at a breakpoint in a generic method", async function () {
-		if (flutterTestDeviceIsWeb)
-			return this.skip();
+		// if (flutterTestDeviceIsWeb)
+		// 	return this.skip();
 
 		await openFile(flutterHelloWorldMainFile);
 		const debugConfig = await startDebugger(dc, flutterHelloWorldMainFile);
@@ -847,8 +838,8 @@ describe(`flutter run debugger (launch on ${flutterTestDeviceId})`, () => {
 	});
 
 	it("includes getters in variables when stopped at a breakpoint", async function () {
-		if (flutterTestDeviceIsWeb)
-			return this.skip();
+		// if (flutterTestDeviceIsWeb)
+		// 	return this.skip();
 
 		await openFile(flutterHelloWorldGettersFile);
 		const config = await startDebugger(dc, flutterHelloWorldGettersFile);
