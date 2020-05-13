@@ -416,6 +416,8 @@ export async function activate(context: vs.ExtensionContext, isRestart: boolean 
 		const connectedSetup = dasClient.registerForServerConnected(async (sc) => {
 			connectedSetup.dispose();
 
+			context.subscriptions.push(new RefactorCommands(logger, context, dasClient));
+
 			if (dasClient.capabilities.supportsClosingLabels && config.closingLabels) {
 				context.subscriptions.push(new ClosingLabelsDecorations(dasClient));
 			}
@@ -488,7 +490,6 @@ export async function activate(context: vs.ExtensionContext, isRestart: boolean 
 	context.subscriptions.push(new EditCommands());
 	if (dasClient && dasAnalyzer) {
 		context.subscriptions.push(new DasEditCommands(logger, context, dasClient));
-		context.subscriptions.push(new RefactorCommands(logger, context, dasClient));
 		context.subscriptions.push(new TypeHierarchyCommand(logger, dasClient));
 		context.subscriptions.push(new GoToSuperCommand(dasAnalyzer));
 	} else if (lspClient && lspAnalyzer) {
